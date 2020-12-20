@@ -2,18 +2,36 @@
   "name": "tower",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon --exec babel-node server.js --ignore dist"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Abdurraheem/Tower.git"
   },
-  "author": "Mohammad",
+  "author": "Mohammad Raheem",
   "license": "ISC",
-  "bugs": {
+    "bugs": {
     "url": "https://github.com/Abdurraheem/Tower/issues"
   },
-  "homepage": "https://github.com/Abdurraheem/Tower#readme"
+  "homepage": "https://github.com/Abdurraheem/Tower#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.10",
+    "nodemon": "^2.0.3"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "2.13.0",
+    "mysql2": "^2.2.5",
+    "path": "^0.12.7",
+    "sequelize": "^6.3.5"
+  }
 }
