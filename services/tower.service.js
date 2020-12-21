@@ -2,11 +2,12 @@ import jwt from 'jsonwebtoken';
 import tower from '../models/tower.model';
 import bcrypt from 'bcryptjs';
 import CONFIG from '../config';
+import hash from 'object-hash';
 
 
 
 // Async function to get the Tower List
-export const getTowerList = async (filters) => { 
+export const getTowerList = async (filters,req) => { 
     const options = {};
     const { name, location, limit, offset } = filters;
     if (name) {
@@ -15,12 +16,17 @@ export const getTowerList = async (filters) => {
     if (location) {
       options.location = location;
     }
+    const redis_client = req.redis;
+    const filterKey = `${hash(filters)}`;
     // Try Catch the awaited promise to handle the error 
     try {
           const response = { };
           const { count, rows } = await findInTower(options, [['createdAt', 'desc']], limit, offset * limit);
           response.count = count;
           response.rows = rows;
+          //add data to Redis
+          redis_client.setex(filterKey, 3600, JSON.stringify(response));
+        
           return response;
 
     } catch (e) {
@@ -42,9 +48,17 @@ export const createTower = async param => {
     }
 }
 
-export const updateTower = async param => {      
-    const {} = param;
-    // working here
+export const updateTower = async (id, param) => {      
+    try {
+        // updating the tower
+        await updateTowerDocs(param, {id: id } );
+        return 'success';
+    } catch (e) {
+        const error = new Error();
+          error.status = 400;
+          error.message = e.message;
+          throw error;
+    }
 }
 
 export const deleteTower = async (id) => { 
@@ -80,6 +94,8 @@ export const fetchTowerStatus = whereParams =>
       where: whereParams,
       order: [['id', 'desc']]
     });
+
+const updateTowerDocs = (fields, whereParams) => tower.update(fields, { where: whereParams });   
 
 
 

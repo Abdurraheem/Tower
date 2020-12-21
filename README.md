@@ -25,6 +25,11 @@ API using mysql database with sequelize ORM.
 $ yarn install
 $ bower install (if require)
 ```
+
+Create Mysql DB name with tower
+
+## Make sure your redis server is running
+
 ## Running the tests
 
 Open up Postman!
@@ -67,6 +72,13 @@ To delete the tower:
 
 curl -L -X DELETE 'http://localhost:9001/api/v1/tower/7' \
 -H 'authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.-joSNIKm_vGV3fBvvBvmEVO20awcNYhRCRKpTQWoksc'
+
+For update record use below curl:
+curl -L -X PUT 'http://localhost:9001/api/v1/tower' \
+-H 'authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.-joSNIKm_vGV3fBvvBvmEVO20awcNYhRCRKpTQWoksc' \
+-H 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'towerId=8' \
+--data-urlencode 'name=noida Burj'
 
 
 ## License

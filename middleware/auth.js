@@ -4,6 +4,7 @@
  */
 import jwt from 'jsonwebtoken';
 import CONFIG from '../config';
+import hash from 'object-hash';
 
 export const Authorization = (req, res, next) => {
     const token = req.headers.authorization; 
@@ -30,3 +31,23 @@ export const Authorization = (req, res, next) => {
     return true;
 };
 
+
+
+//Middleware Function to Check Cache
+export const checkCache = (req, res, next) => {
+  const { name, location, limit, offset } = req.query;
+  const filterKey = `${hash({name, location, limit, offset})}`;
+  req.redis.get(filterKey, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    }
+    //if no match found
+    if (data != null) { 
+      res.send(JSON.parse(data));
+    } else {
+      //proceed to next middleware function
+      next();
+    }
+  });
+};

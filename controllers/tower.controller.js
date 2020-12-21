@@ -3,11 +3,11 @@ import * as TowerService from '../services/tower.service';
 
 // Async Controller function to get the Tower List
 export const getTower = async (req, res) => {    
-
+   
     // Check the existence of the query parameters, If doesn't exists assign a default value
     const { offset , limit, name, location } = req.query;
     try {
-        var towerList = await TowerService.getTowerList({name, location, offset, limit})
+        const towerList = await TowerService.getTowerList({name, location, offset, limit},req);
         // Return the tower list with the appropriate HTTP password Code and Message.
         return res.status(200).json({status: 200, data: towerList, message: "Succesfully tower  list Recieved"});
     } catch (e) {
@@ -56,13 +56,32 @@ export const createTower = async (req, res) => {
 
 export const updateTower = async (req, res) => {
     // Id is necessary for the update
-    if (!req.body._id) {
+    let params = {};
+    if (!req.body.towerId) {
         return res.status(400).json({status: 400., message: "Id must be present"})
     }
-   //...working here
-  
+    const id = (req.body.towerId).trim();
+    if(req.body.name){
+      params.name = (req.body.name).trim();
+    }
+    if(req.body.location){
+     params.location = (req.body.location).trim();
+    }
+    if(req.body.floor){
+     params.floor = Number(req.body.floor);
+    }
+    if(req.body.office){
+     params.office = Number(req.body.office);
+    }
+    if(req.body.latitude){
+     params.latitude = Number(req.body.latitude);
+    }
+    if(req.body.longitude){
+     params.longitude = Number(req.body.longitude);
+    }
     try {
-        const updatedTower = await TowerService.updateTower(id); //. TODO
+        const updatedTower = await TowerService.updateTower( id, params);
+        await req.redis.flushdb();
         return res.status(200).json({status: 200, data: updatedTower, message: "Succesfully Updated Tower"})
     } catch (e) {
         return res.status(400).json({status: 400., message: e.message})

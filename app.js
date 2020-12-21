@@ -6,10 +6,15 @@ import CONST from './config';
 import APIs from './routes';
 import session from 'express-session';
 
+import redis from 'redis';
+
 
 const app = express();
 
-
+const port = process.env.PORT || '9001';
+const port_redis = process.env.PORT || 6379;
+//configure redis client on port 6379
+const redis_client = redis.createClient(port_redis);
 app.use(
     session({
         secret: 'sessionSecretKey',
@@ -33,10 +38,11 @@ app.use(
 );
 app.use(cookieParser());
 
-app.use('/api', APIs);
+
 
 // HANDLING CORS
 app.use((req, res, next) => {
+  req.redis = redis_client;
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
     'Access-Control-Allow-Headers',
@@ -45,11 +51,7 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   next();
 });
-
-app.use((req, res, next) => {
-  console.log('404:', req.originalUrl);
-  res.status(404).send('404');
-});
+app.use('/api', APIs);
 
 // eslint-disable-next-line consistent-return
 function errorHandler(err, req, res, next) {

@@ -6,14 +6,14 @@ import {
     deleteTower,
 } from '../controllers/tower.controller';
 
-import { Authorization } from '../middleware/auth';
+import { Authorization, checkCache } from '../middleware/auth';
 import { validateTower, validateOffsetLimit } from '../validation/tower'
 
 
 const router = Router();
 router.post('/tower',Authorization, validateTower, createTower);
-router.get('/tower',validateOffsetLimit, getTower);
-router.put('/tower/:id',Authorization, updateTower);
+router.get('/tower',validateOffsetLimit,checkCache,  getTower);
+router.put('/tower',Authorization, updateTower);
 router.delete('/tower/:id',Authorization, deleteTower)
 
 // Export the Router
