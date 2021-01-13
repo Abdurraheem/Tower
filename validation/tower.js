@@ -31,7 +31,9 @@ export const validateTower = async(req, res, next) => {
  return next();
 }
 
-
+/**
+* Validate for pagination
+*/
 export const validateOffsetLimit = async(req, res, next) =>{
 
  const { offset, limit } = req.query;

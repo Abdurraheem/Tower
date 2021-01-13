@@ -42,7 +42,7 @@ export const checkCache = (req, res, next) => {
       console.log(err);
       res.status(500).send(err);
     }
-    //if no match found
+    //if no match found testing
     if (data != null) { 
       res.send(JSON.parse(data));
     } else {
